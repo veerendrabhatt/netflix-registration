@@ -1,5 +1,5 @@
 /**
- * effects.js - CineVault cinematic effects
+ * effects.js - Netflix cinematic effects
  * Intro animation (once per session), mouse-follow glow, particles.
  * Does not change form names, API endpoints, or script.js submission logic.
  */
@@ -10,7 +10,7 @@
   /* ---------- Config ---------- */
   var INTRO_DURATION_MS = 1200;
   var REDIRECT_DELAY_MS = 800;
-  var INTRO_STORAGE_KEY = 'cinevault-intro-done';
+  var INTRO_STORAGE_KEY = 'netflix-intro-done';
   var MOUSE_GLOW_ID = 'mouse-glow';
   var PARTICLES_ID = 'particles';
   var INTRO_OVERLAY_ID = 'intro-overlay';
@@ -43,8 +43,8 @@
       try {
         var sound = new Audio(INTRO_SOUND_FILE);
         sound.volume = 0.4;
-        sound.play().catch(function () {});
-      } catch (e) {}
+        sound.play().catch(function () { });
+      } catch (e) { }
     }
 
     setTimeout(function () {
@@ -97,10 +97,10 @@
   window.fastRedirect = fastRedirect;
 
   /**
-   * Intercept CineVault logo clicks so redirect uses loading overlay and feels instant.
+   * Intercept Netflix logo clicks so redirect uses loading overlay and feels instant.
    */
   function initLogoRedirect() {
-    document.querySelectorAll('a.cinevault-logo').forEach(function (link) {
+    document.querySelectorAll('a.netflix-logo').forEach(function (link) {
       link.addEventListener('click', function (e) {
         var href = link.getAttribute('href');
         if (href && href !== '#') {

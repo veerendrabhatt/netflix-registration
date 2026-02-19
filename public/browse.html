@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix — Browse Movies</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="intro.css">
+    <style>
+        .browse-container {
+            padding: 2rem 4%;
+            padding-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie-info {
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .movie-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-year {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.2rem;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e50914;
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+
+<body class="intro-complete">
+    <div class="bg-gradient-animated" aria-hidden="true"></div>
+    <div id="mouse-glow" class="mouse-glow" aria-hidden="true"></div>
+    <div id="particles" class="particles" aria-hidden="true"></div>
+
+    <div class="page-wrapper" style="max-width: none;">
+        <header class="app-brand"
+            style="flex-direction: row; justify-content: space-between; align-items: center; padding: 1.5rem 4%; position: fixed; top: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px); background: rgba(0,0,0,0.5);">
+            <a href="/browse.html" class="logo netflix-logo logo-text"
+                style="font-size: 1.8rem; margin: 0;">Net<span>flix</span></a>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <nav style="display: flex; gap: 1rem; font-size: 0.9rem; font-weight: 500;">
+                    <a href="#" style="color: #fff; text-decoration: none;">Home</a>
+                    <a href="#" style="color: rgba(255,255,255,0.7); text-decoration: none;">TV Shows</a>
+                    <a href="#" style="color: rgba(255,255,255,0.7); text-decoration: none;">Movies</a>
+                </nav>
+                <a href="/login.html" style="color: #fff; text-decoration: none; font-size: 0.9rem;">Sign Out</a>
+            </div>
+        </header>
+
+        <main class="browse-container">
+            <div class="search-bar">
+                <input type="text" id="movie-search" class="search-input" placeholder="Search for movies, TV shows...">
+                <button id="search-btn" class="btn btn-primary" style="margin: 0; padding: 0 2rem;">Search</button>
+            </div>
+
+            <div id="search-results-section" style="display: none;">
+                <h2 class="section-title">Search Results</h2>
+                <div id="search-results" class="movie-grid"></div>
+            </div>
+
+            <h2 class="section-title">Trending Now</h2>
+            <div id="trending-movies" class="movie-grid">
+                <!-- Skeleton loader or empty state -->
+                <p style="color: rgba(255,255,255,0.5);">Loading trending movies...</p>
+            </div>
+
+            <h2 class="section-title">Action & Adventure</h2>
+            <div id="action-movies" class="movie-grid">
+                <p style="color: rgba(255,255,255,0.5);">Loading action movies...</p>
+            </div>
+        </main>
+
+        <footer class="page-footer" style="margin-top: 4rem;">
+            <p>Developed by veer &copy; 2026</p>
+        </footer>
+    </div>
+
+    <script src="effects.js"></script>
+    <script src="browse.js"></script>
+</body>
+
+</html>

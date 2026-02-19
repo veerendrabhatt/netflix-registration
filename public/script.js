@@ -104,9 +104,9 @@ function initLoginForm() {
       if (data.success) {
         showMessage('login-message', data.message || 'Login successful! Redirecting...', false);
         if (typeof window.fastRedirect === 'function') {
-          window.fastRedirect('https://netflix-landing-eta.vercel.app/');
+          window.fastRedirect('https://netflix-clone-v.vercel.app/');
         } else {
-          setTimeout(() => { window.location.href = 'https://netflix-landing-eta.vercel.app/'; }, 800);
+          setTimeout(() => { window.location.href = 'https://netflix-clone-v.vercel.app/'; }, 800);
         }
       } else {
         showMessage('login-message', data.message || 'Invalid credentials.');

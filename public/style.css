@@ -41,8 +41,8 @@
   --transition: 0.3s ease;
 }
 
-/* ---------- CineVault logo (navbar / clickable branding) ---------- */
-.cinevault-logo {
+/* ---------- Netflix logo (navbar / clickable branding) ---------- */
+.netflix-logo {
   font-size: 28px;
   font-weight: 800;
   color: #e50914;
@@ -51,30 +51,30 @@
   transition: 0.3s ease;
 }
 
-.cinevault-logo:hover {
+.netflix-logo:hover {
   color: #ff2a2a;
   text-shadow: 0 0 12px rgba(229, 9, 20, 0.7);
   transform: scale(1.05);
 }
 
-/* Two-tone logo when used inside app-brand (Cine white, Vault red) */
-.app-brand .cinevault-logo {
+/* Two-tone logo when used inside app-brand (Netflix white, Clone red) */
+.app-brand .netflix-logo {
   color: var(--text);
   font-size: 2rem;
   letter-spacing: 0.04em;
 }
 
-.app-brand .cinevault-logo span {
+.app-brand .netflix-logo span {
   color: var(--primary);
 }
 
-.app-brand .cinevault-logo:hover {
+.app-brand .netflix-logo:hover {
   color: var(--text);
   text-shadow: 0 0 12px rgba(229, 9, 20, 0.7);
   transform: scale(1.05);
 }
 
-.app-brand .cinevault-logo:hover span {
+.app-brand .netflix-logo:hover span {
   color: #ff2a2a;
 }
 
@@ -177,21 +177,26 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    var(--bg-start) 0%,
-    #0d0d12 25%,
-    #120006 50%,
-    var(--bg-end) 75%,
-    #0b0b0f 100%
-  );
+  background: linear-gradient(135deg,
+      var(--bg-start) 0%,
+      #0d0d12 25%,
+      #120006 50%,
+      var(--bg-end) 75%,
+      #0b0b0f 100%);
   background-size: 400% 400%;
   animation: gradientShift 12s ease infinite;
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* ---------- 2. Mouse-follow radial glow (position set by JS) ---------- */
@@ -204,12 +209,10 @@ body {
   margin-left: -300px;
   margin-top: -300px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    var(--primary-glow-soft) 0%,
-    rgba(229, 9, 20, 0.08) 30%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      var(--primary-glow-soft) 0%,
+      rgba(229, 9, 20, 0.08) 30%,
+      transparent 70%);
   pointer-events: none;
   z-index: 0;
   transition: opacity var(--transition);
@@ -234,18 +237,23 @@ body {
 }
 
 @keyframes particleFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
     opacity: 0.1;
   }
+
   25% {
     transform: translate(20px, -40px) scale(1.1);
     opacity: 0.18;
   }
+
   50% {
     transform: translate(-30px, 20px) scale(0.9);
     opacity: 0.12;
   }
+
   75% {
     transform: translate(15px, 30px) scale(1.05);
     opacity: 0.16;
@@ -314,11 +322,14 @@ body {
 }
 
 @keyframes logoGlowRed {
-  0%, 100% {
+
+  0%,
+  100% {
     text-shadow:
       0 0 20px var(--primary-glow),
       0 0 40px var(--primary-glow-soft);
   }
+
   50% {
     text-shadow:
       0 0 28px var(--primary-glow),
@@ -327,11 +338,14 @@ body {
 }
 
 @keyframes logoGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     text-shadow:
       0 0 20px var(--primary-glow-soft),
       0 0 40px rgba(229, 9, 20, 0.15);
   }
+
   50% {
     text-shadow:
       0 0 28px var(--primary-glow-soft),
@@ -457,7 +471,7 @@ body {
   box-shadow: 0 0 0 3px var(--primary-neon);
 }
 
-.input-wrap input:focus + .input-icon,
+.input-wrap input:focus+.input-icon,
 .input-wrap:focus-within .input-icon {
   color: var(--primary);
 }
@@ -536,14 +550,12 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 0%,
-    transparent 35%,
-    rgba(255, 255, 255, 0.28) 50%,
-    transparent 65%,
-    transparent 100%
-  );
+  background: linear-gradient(105deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255, 255, 255, 0.28) 50%,
+      transparent 65%,
+      transparent 100%);
   background-size: 200% 100%;
   background-position: 150% 0;
   pointer-events: none;
@@ -580,14 +592,19 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
   background-size: 200% 100%;
   animation: shimmer 1.2s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ---------- Remember me row ---------- */

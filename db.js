@@ -1,57 +1,38 @@
 /**
- * db.js - Database connection and table setup for Aiven MySQL
- *
- * CREDENTIALS: Set DB_PASSWORD environment variable before running, e.g.:
- *   set DB_PASSWORD=your_password
- * Or paste your password below in DB_PASSWORD (avoid committing real passwords).
+ * db.js - Database connection and table setup for Aiven PostgreSQL
  */
-
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 
 // ============================================
-// AIVEN MYSQL CREDENTIALS (set in Vercel: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT)
+// AIVEN POSTGRESQL CREDENTIALS
 // ============================================
-const DB_HOST = process.env.DB_HOST || 'mysql-451a4f3-cambridge-f76d.b.aivencloud.com';
-const DB_PORT = parseInt(process.env.DB_PORT || '27381', 10);
-const DB_USER = process.env.DB_USER || 'avnadmin';
-const DB_NAME = process.env.DB_NAME || 'defaultdb';
-const PASSWORD_FALLBACK = '';
-const DB_PASSWORD = process.env.DB_PASSWORD || PASSWORD_FALLBACK;
-
-if (!DB_PASSWORD) {
-  const errorMsg = 'DB_PASSWORD is missing. Set environment variable: DB_PASSWORD=your_password';
-  console.error(errorMsg);
-  console.error('Required env vars: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT');
-  throw new Error('DB_PASSWORD required - check Vercel environment variables');
-}
+const DB_HOST = process.env.DB_HOST;
+const DB_PORT = parseInt(process.env.DB_PORT || '26553', 10);
+const DB_USER = process.env.DB_USER;
+const DB_NAME = process.env.DB_NAME;
+const DB_PASSWORD = process.env.DB_PASSWORD;
 
 /**
- * Connection pool with SSL for Aiven MySQL.
- * rejectUnauthorized: false is required for Aiven's cloud certificates.
+ * Connection pool with SSL for Aiven PostgreSQL.
  */
-const pool = mysql.createPool({
+const pool = new Pool({
   host: DB_HOST,
   port: DB_PORT,
   user: DB_USER,
   password: DB_PASSWORD,
   database: DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 10000, // 10 seconds timeout for initial connection
-  acquireTimeout: 10000, // 10 seconds timeout for acquiring connection from pool
-  timeout: 10000, // 10 seconds timeout for queries
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false, // Required for Aiven's cloud certificates
   },
+  connectionTimeoutMillis: 10000,
 });
 
 /**
- * Users table schema - created automatically if it does not exist.
+ * Users table schema for PostgreSQL.
  */
 const CREATE_USERS_TABLE_SQL = `
   CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -63,21 +44,28 @@ const CREATE_USERS_TABLE_SQL = `
 
 /**
  * Initializes DB: verifies connection, then creates users table if missing.
- * Logs "Connected to MySQL" and "Table ready".
  */
 async function initDatabase() {
-  let connection;
+  let client;
   try {
-    connection = await pool.getConnection();
-    console.log('Connected to MySQL');
-    await connection.query(CREATE_USERS_TABLE_SQL);
+    client = await pool.connect();
+    console.log('Connected to PostgreSQL');
+    await client.query(CREATE_USERS_TABLE_SQL);
     console.log('Table ready');
   } catch (err) {
     console.error('Database initialization failed:', err.message);
     throw err;
   } finally {
-    if (connection) connection.release();
+    if (client) client.release();
   }
 }
 
-module.exports = { pool, initDatabase };
+// Helper to match mysql2's pool.execute (pg uses pool.query)
+// pg's query returns an object with 'rows' property, mysql2 returns [rows, fields]
+// We'll wrap it to minimize changes in server.js, but server.js needs update anyway for placeholders
+const execute = async (text, params) => {
+  const res = await pool.query(text, params);
+  return [res.rows, res];
+};
+
+module.exports = { pool, initDatabase, execute };

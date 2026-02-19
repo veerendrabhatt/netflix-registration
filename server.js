@@ -2,13 +2,14 @@
  * server.js - Main entry point for the Auth App
  * Vercel: exported app is used as serverless handler. Local: app.listen(port) starts the server.
  */
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const bcrypt = require('bcrypt');
-const { pool, initDatabase } = require('./db');
+const { pool, initDatabase, execute } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -51,9 +52,9 @@ function ensureDb() {
 app.get('/api/health', async (req, res) => {
   try {
     await ensureDb();
-    const [rows] = await pool.execute('SELECT 1 as healthy');
-    res.json({ 
-      status: 'ok', 
+    const [rows] = await execute('SELECT 1 as healthy');
+    res.json({
+      status: 'ok',
       database: 'connected',
       env: {
         hasHost: !!process.env.DB_HOST,
@@ -64,8 +65,8 @@ app.get('/api/health', async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json({ 
-      status: 'error', 
+    res.status(500).json({
+      status: 'error',
       database: 'disconnected',
       error: err.message,
       code: err.code,
@@ -97,14 +98,14 @@ app.post('/api/register', async (req, res) => {
     // Hash password so we never store plain text (bcrypt, 10 rounds)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await pool.execute(
-      'INSERT INTO users (user_id, name, email, phone, password) VALUES (?, ?, ?, ?, ?)',
+    await execute(
+      'INSERT INTO users (user_id, name, email, phone, password) VALUES ($1, $2, $3, $4, $5)',
       [user_id.trim(), name.trim(), email.trim(), phone.trim(), hashedPassword]
     );
 
     res.json({ success: true, message: 'Registration successful. Redirecting to login...' });
   } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY') {
+    if (err.code === '23505') {
       return res.status(400).json({ success: false, message: 'User ID or Email already exists.' });
     }
     // Log full error for debugging on Vercel
@@ -115,7 +116,7 @@ app.post('/api/register', async (req, res) => {
       sqlState: err.sqlState,
       stack: err.stack
     });
-    
+
     // Return more specific error messages
     if (err.message && err.message.includes('DB_PASSWORD')) {
       return res.status(500).json({ success: false, message: 'Database configuration error. Please check server logs.' });
@@ -123,7 +124,7 @@ app.post('/api/register', async (req, res) => {
     if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT') {
       return res.status(500).json({ success: false, message: 'Database connection failed. Please try again later.' });
     }
-    
+
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
@@ -147,8 +148,8 @@ app.post('/api/login', async (req, res) => {
 
   try {
     await ensureDb();
-    const [rows] = await pool.execute(
-      'SELECT id, user_id, email, password FROM users WHERE user_id = ? OR email = ?',
+    const [rows] = await execute(
+      'SELECT id, user_id, email, password FROM users WHERE user_id = $1 OR email = $2',
       [loginId.trim(), loginId.trim()]
     );
 
@@ -173,7 +174,7 @@ app.post('/api/login', async (req, res) => {
       sqlState: err.sqlState,
       stack: err.stack
     });
-    
+
     // Return more specific error messages
     if (err.message && err.message.includes('DB_PASSWORD')) {
       return res.status(500).json({ success: false, message: 'Database configuration error. Check Vercel environment variables.' });
@@ -184,7 +185,7 @@ app.post('/api/login', async (req, res) => {
     if (err.code === 'ENOTFOUND') {
       return res.status(500).json({ success: false, message: 'Database host not found. Check DB_HOST environment variable.' });
     }
-    
+
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
