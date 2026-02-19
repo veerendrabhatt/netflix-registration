@@ -19,9 +19,10 @@ const PASSWORD_FALLBACK = '';
 const DB_PASSWORD = process.env.DB_PASSWORD || PASSWORD_FALLBACK;
 
 if (!DB_PASSWORD) {
-  console.error('DB_PASSWORD is missing. Set environment variable: set DB_PASSWORD=your_password');
-  console.error('Or paste your Aiven password in db.js as PASSWORD_FALLBACK.');
-  throw new Error('DB_PASSWORD required');
+  const errorMsg = 'DB_PASSWORD is missing. Set environment variable: DB_PASSWORD=your_password';
+  console.error(errorMsg);
+  console.error('Required env vars: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT');
+  throw new Error('DB_PASSWORD required - check Vercel environment variables');
 }
 
 /**

@@ -62,7 +62,23 @@ app.post('/api/register', async (req, res) => {
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ success: false, message: 'User ID or Email already exists.' });
     }
-    console.error('Registration error:', err);
+    // Log full error for debugging on Vercel
+    console.error('Registration error:', {
+      message: err.message,
+      code: err.code,
+      errno: err.errno,
+      sqlState: err.sqlState,
+      stack: err.stack
+    });
+    
+    // Return more specific error messages
+    if (err.message && err.message.includes('DB_PASSWORD')) {
+      return res.status(500).json({ success: false, message: 'Database configuration error. Please check server logs.' });
+    }
+    if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT') {
+      return res.status(500).json({ success: false, message: 'Database connection failed. Please try again later.' });
+    }
+    
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
@@ -104,7 +120,23 @@ app.post('/api/login', async (req, res) => {
 
     res.json({ success: true, message: 'Login successful!' });
   } catch (err) {
-    console.error('Login error:', err);
+    // Log full error for debugging on Vercel
+    console.error('Login error:', {
+      message: err.message,
+      code: err.code,
+      errno: err.errno,
+      sqlState: err.sqlState,
+      stack: err.stack
+    });
+    
+    // Return more specific error messages
+    if (err.message && err.message.includes('DB_PASSWORD')) {
+      return res.status(500).json({ success: false, message: 'Database configuration error. Please check server logs.' });
+    }
+    if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT') {
+      return res.status(500).json({ success: false, message: 'Database connection failed. Please try again later.' });
+    }
+    
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
