@@ -1,23 +1,33 @@
-# Auth App – Registration & Login
+## Deployment to Vercel
 
-A beginner-friendly Registration and Login web application built with **Node.js**, **Express**, and **MySQL**. Passwords are hashed with bcrypt; the server creates the `users` table automatically on start.
+1. **Push your code** to a GitHub repository.
+2. **Import the project** in Vercel.
+3. **Configure Environment Variables**:
+   In Vercel Project Settings, add the following:
+   - `DB_HOST`: Your PostgreSQL host (e.g., Aiven host)
+   - `DB_USER`: `avnadmin`
+   - `DB_PASSWORD`: Your database password
+   - `DB_NAME`: `defaultdb`
+   - `DB_PORT`: `26553`
+   - `VITE_OMDB_API_KEY`: `51a9739a` (for movie features)
+4. **Deploy!** Vercel will automatically detect the settings in `vercel.json` and `package.json`.
 
 ---
 
-## Run instructions
+## Run instructions (Local)
 
 1. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. **Set database credentials**  
-   Edit `db.js` and replace the placeholder values for:
-   - `DB_HOST`
-   - `DB_USER`
-   - `DB_PASSWORD`
-   - `DB_NAME`
-   - `DB_PORT`  
+2. **Set logic environment variables**  
+   Create a `.env` file with your credentials (see above list).
+
+3. **Start the server**
+   ```bash
+   npm start
+   ```
 
    Or set them as environment variables (e.g. for Aiven cloud):
    ```bash

@@ -1,20 +1,24 @@
 {
   "name": "auth-app",
   "version": "1.0.0",
-  "description": "Beginner-friendly Registration and Login app with Node.js, Express, and MySQL",
+  "description": "Netflix-branded Registration and Login app with Node.js, Express, and PostgreSQL",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "keywords": [
+    "netflix",
     "auth",
     "login",
     "register",
     "express",
-    "mysql"
+    "postgresql"
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",

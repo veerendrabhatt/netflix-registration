@@ -1,0 +1,12 @@
+.env
+node_modules
+*.png
+*.jpg
+*.webp
+*.txt
+.git
+.gitignore
+task.md
+implementation_plan.md
+walkthrough.md
+brain
