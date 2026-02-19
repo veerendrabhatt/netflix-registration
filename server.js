@@ -176,10 +176,13 @@ app.post('/api/login', async (req, res) => {
     
     // Return more specific error messages
     if (err.message && err.message.includes('DB_PASSWORD')) {
-      return res.status(500).json({ success: false, message: 'Database configuration error. Please check server logs.' });
+      return res.status(500).json({ success: false, message: 'Database configuration error. Check Vercel environment variables.' });
     }
-    if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT') {
+    if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT' || err.code === 'PROTOCOL_CONNECTION_LOST') {
       return res.status(500).json({ success: false, message: 'Database connection failed. Please try again later.' });
+    }
+    if (err.code === 'ENOTFOUND') {
+      return res.status(500).json({ success: false, message: 'Database host not found. Check DB_HOST environment variable.' });
     }
     
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
